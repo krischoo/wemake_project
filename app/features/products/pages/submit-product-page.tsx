@@ -3,7 +3,7 @@ import { Form } from "react-router";
 import { useState } from "react";
 
 // 로컬 타입 임포트
-import { Route } from "./+types/submit-page";
+import { Route } from "./+types/submit-product-page";
 
 // 공통 컴포넌트 임포트
 import { Button } from "~/common/components/ui/button";

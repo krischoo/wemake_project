@@ -10,7 +10,7 @@ import { useState } from "react";
 
 interface SelectPairProps {
 	label: string;
-	description: string;
+	description?: string;
 	name: string;
 	required?: boolean;
 	placeholder: string;

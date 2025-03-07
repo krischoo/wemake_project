@@ -64,7 +64,8 @@ export default function HomePage() {
 				</div>
 				{Array.from({ length: 5 }).map((_, index) => (
 					<PostCard
-						id="postId"
+						key={`postId-${index}`}
+						id={`postId-${index}`}
 						title="What is best writing app?"
 						author="Kris"
 						authorAvatarUrl="https://github.com/apple.png"

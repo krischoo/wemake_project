@@ -10,7 +10,7 @@ import { Settings } from "luxon";
 import type { Route } from "./+types/root";
 import stylesheet from "./app.css?url";
 import Navigation from "./common/components/navigation";
-
+import { useLocation } from "react-router";
 export const links: Route.LinksFunction = () => [
 	{ rel: "preconnect", href: "https://fonts.googleapis.com" },
 	{
@@ -38,7 +38,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 				<Links />
 			</head>
 			<body>
-				<main className="px-20">{children}</main>
+				<main>{children}</main>
 				<ScrollRestoration />
 				<Scripts />
 			</body>
@@ -47,13 +47,17 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
+	const { pathname } = useLocation();
+
 	return (
-		<div className="py-24">
-			<Navigation
-				isLoggedIn={true}
-				hasNotifications={true}
-				hasMessages={true}
-			/>
+		<div className={pathname.includes("/auth") ? "" : "py-24 px-20"}>
+			{pathname.includes("/auth") ? null : (
+				<Navigation
+					isLoggedIn={true}
+					hasNotifications={false}
+					hasMessages={false}
+				/>
+			)}
 			<Outlet />
 		</div>
 	);

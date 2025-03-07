@@ -1,3 +1,20 @@
+/*
+ * Card 컴포넌트 사용법:
+ *
+ * <Card> - 카드의 기본 컨테이너
+ *   <CardHeader> - 카드 상단 영역
+ *     <CardTitle>제목</CardTitle> - 카드 제목
+ *     <CardDescription>설명</CardDescription> - 카드 부제목/설명
+ *   </CardHeader>
+ *   <CardContent> - 카드 본문 영역
+ *     <p>내용</p> - 카드 내용
+ *   </CardContent>
+ *   <CardFooter> - 카드 하단 영역
+ *     <p>푸터</p> - 카드 푸터 내용
+ *   </CardFooter>
+ * </Card>
+ */
+
 import * as React from "react";
 
 import { cn } from "~/lib/utils";

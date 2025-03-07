@@ -1,50 +1,148 @@
-import { useSearchParams } from "react-router-dom";
-import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import PostCard from "@/common/components/post-card";
+import Hero from "~/common/components/hero";
+import { Route } from "./+types/community-page";
+import { Link } from "react-router";
+import { Button } from "~/common/components/ui/button";
+import {
+	DropdownMenu,
+	DropdownMenuTrigger,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuCheckboxItem,
+} from "~/common/components/ui/dropdown-menu";
+import { ChevronDownIcon, MenuIcon } from "lucide-react";
+import { SORT_OPTIONS, PERIOD_OPTIONS } from "../constants-community";
+import { useSearchParams } from "react-router";
+import { Form } from "react-router";
+import { Input } from "~/common/components/ui/input";
+import { PostCard } from "../components/post-card";
+export const meta: Route.MetaFunction = () => {
+	return [
+		{ title: "커뮤니티 | writenow" },
+		{ name: "description", content: "커뮤니티 페이지입니다." },
+	];
+};
 
-function CommunityPage() {
-	const [searchParams] = useSearchParams();
-	const sortBy = searchParams.get("sort") || "default"; // URL에 sort 파라미터가 없으면 'default'
-
-	const [posts, setPosts] = useState([]);
-
-	useEffect(() => {
-		// sortBy 값에 따라 다른 데이터를 가져옴
-		async function fetchPosts() {
-			if (sortBy === "top") {
-				// 좋아요나 조회수 등으로 정렬된 게시물 가져오기
-				const response = await fetch("/api/posts?sort=likes_desc");
-				const data = await response.json();
-				setPosts(data);
-			} else if (sortBy === "new") {
-				// 최신 날짜순으로 정렬된 게시물 가져오기
-				const response = await fetch("/api/posts?sort=date_desc");
-				const data = await response.json();
-				setPosts(data);
-			}
-			// ... 기본 정렬 로직
-		}
-
-		fetchPosts();
-	}, [sortBy]); // sortBy가 변경될 때마다 실행
-
+export default function CommunityPage() {
+	const [searchParams, setSearchParams] = useSearchParams();
+	const sorting = searchParams.get("sorting") || "newest";
+	const period = searchParams.get("period") || "all";
 	return (
 		<div>
-			<h1>커뮤니티 게시물</h1>
+			<Hero title="커뮤니티 페이지" subtitle="커뮤니티 페이지입니다." />
+			<div className="grid grid-cols-6 items-start gap-40">
+				{/* 메인 콘텐츠 (좌측) */}
+				<main className="col-span-4 space-y-10">
+					<section className="flex justify-between items-end">
+						<div className="space-y-6 w-full">
+							{/* 드롭다운 메뉴 */}
+							<div className="flex items-center gap-4">
+								<DropdownMenu>
+									<DropdownMenuTrigger className="flex items-center gap-2">
+										<span className="capitalize text-sm font-semibold">
+											{sorting}
+										</span>
+										<ChevronDownIcon className="size-5" />
+									</DropdownMenuTrigger>
+									<DropdownMenuContent>
+										{SORT_OPTIONS.map((option) => (
+											<DropdownMenuCheckboxItem
+												key={option}
+												className="capitalize cursor-pointer"
+												onCheckedChange={(checked: boolean) => {
+													if (checked) {
+														searchParams.set("sorting", option);
+														setSearchParams(searchParams);
+													}
+												}}
+											>
+												{option}
+											</DropdownMenuCheckboxItem>
+										))}
+									</DropdownMenuContent>
+								</DropdownMenu>
+								{sorting === "popular" && (
+									<DropdownMenu>
+										<DropdownMenuTrigger className="flex items-center gap-2">
+											<span className="capitalize text-sm font-semibold">
+												{period}
+											</span>
+											<ChevronDownIcon className="size-5" />
+										</DropdownMenuTrigger>
+										<DropdownMenuContent>
+											{PERIOD_OPTIONS.map((option) => (
+												<DropdownMenuCheckboxItem
+													key={option}
+													className="capitalize cursor-pointer"
+													onCheckedChange={(checked: boolean) => {
+														if (checked) {
+															searchParams.set("period", option);
+															setSearchParams(searchParams);
+														}
+													}}
+												>
+													{option}
+												</DropdownMenuCheckboxItem>
+											))}
+										</DropdownMenuContent>
+									</DropdownMenu>
+								)}
+							</div>
 
-			{/* 정렬 옵션 선택 UI */}
-			<div className="sort-options">
-				<Link to="/community">기본</Link>
-				<Link to="/community?sort=top">인기순</Link>
-				<Link to="/community?sort=new">최신순</Link>
-			</div>
+							{/* 게시물 검색 */}
+							<Form className="w-1/2">
+								<Input
+									type="search"
+									name="search"
+									placeholder="검색어를 입력해주세요."
+								/>
+							</Form>
+						</div>
+						<Button className="bottom-0" asChild>
+							<Link to="/community/submit">게시물 작성</Link>
+						</Button>
+					</section>
 
-			{/* 게시물 목록 표시 */}
-			<div className="posts-grid">
-				{posts.map((post) => (
-					<PostCard key={post.id} post={post} />
-				))}
+					{/* 게시물 리스트 */}
+					<section className="space-y-5">
+						{Array.from({ length: 5 }).map((_, index) => (
+							<PostCard
+								key={`postId-${index}`}
+								id={`postId-${index}`}
+								title="What is best writing app?"
+								author="Kris"
+								authorAvatarUrl="https://github.com/apple.png"
+								category="Productivity"
+								createdAt="2 hours ago"
+								expanded={true}
+							/>
+						))}
+					</section>
+				</main>
+
+				{/* 사이드바 (우측) - 카테고리 리스트 */}
+				<aside className="col-span-2 space-y-4">
+					<span className="text-lg font-bold text-muted-foreground uppercase">
+						Topics
+					</span>
+					<div className="flex flex-col gap-2 items-start">
+						{[
+							"AI Tools",
+							"Note Taking Apps",
+							"Productivity Tools",
+							"Writing Tools",
+							"Other",
+						].map((category) => (
+							<Button variant="link" key={category} asChild className="pl-0">
+								<Link
+									to={`/community?topic=${category}`}
+									className="text-sm font-semibold text-muted-foreground hover:text-foreground"
+								>
+									{category}
+								</Link>
+							</Button>
+						))}
+					</div>
+				</aside>
 			</div>
 		</div>
 	);

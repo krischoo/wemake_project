@@ -2,7 +2,7 @@ import { Route } from "./+types/jobs-page";
 import Hero from "~/common/components/hero";
 import { JobCard } from "~/features/jobs/components/job-card";
 import { Button } from "~/common/components/ui/button";
-import { JOB_TYPES, LOCATION_TYPES, SALARY_RANGE } from "../constant";
+import { JOB_TYPES, LOCATION_TYPES, SALARY_RANGE } from "../constants-jobs";
 import { Link } from "react-router";
 import { useSearchParams } from "react-router";
 import { cn } from "~/lib/utils";

@@ -146,7 +146,7 @@ const menus = [
 			{
 				name: "Create a Team",
 				description: "Create a team to our community",
-				to: "teams/create",
+				to: "teams/submit",
 			},
 		],
 	},
