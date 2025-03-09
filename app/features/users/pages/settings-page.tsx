@@ -43,8 +43,8 @@ export default function SettingsPage() {
 							name="interest"
 							placeholder="선택하기"
 							options={[
-								{ label: "창작 글쓰기", value: "creative-writing" },
 								{ label: "독서 리뷰", value: "book-review" },
+								{ label: "창작 글쓰기", value: "creative-writing" },
 								{ label: "시/에세이", value: "poetry-essay" },
 								{ label: "전문 글쓰기", value: "professional-writing" },
 								{ label: "독서 토론", value: "book-discussion" },

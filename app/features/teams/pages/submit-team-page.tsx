@@ -9,6 +9,7 @@ import {
 	LOCATION_TYPES,
 	SALARY_RANGE,
 } from "~/features/jobs/constants-jobs";
+import { PRODUCT_STAGE } from "../constants-teams";
 
 export const meta: Route.MetaFunction = () => {
 	return [
@@ -25,43 +26,22 @@ export default function SubmitTeamPage() {
 			<Form className="max-w-screen-xl mx-auto flex flex-col gap-10 items-center">
 				<div className="grid grid-cols-3 gap-5 w-full">
 					<InputPair
-						id="name"
-						label="어떤 목적입니까?"
-						name="name"
+						id="product"
+						label="어떤 제품입니까?"
+						name="product"
 						description="30자 이내로 입력해주세요"
 						maxLength={30}
 						type="text"
 						required
-						placeholder="팀 이름을 입력해주세요."
+						placeholder="제품 이름을 입력해주세요."
 					/>
 					<SelectPair
-						label="어떤 목적입니까?"
-						description="팀 목적을 선택해주세요."
-						name="purpose"
+						label="어떤 단계입니까?"
+						description="제품의 단계를 선택해주세요."
+						name="stage"
 						required
-						placeholder="팀 목적을 선택해주세요."
-						options={[
-							{
-								label: "프로젝트 진행",
-								value: "project",
-							},
-							{
-								label: "스터디 모임",
-								value: "study",
-							},
-							{
-								label: "창업 준비",
-								value: "startup",
-							},
-							{
-								label: "대회/공모전",
-								value: "competition",
-							},
-							{
-								label: "기타",
-								value: "etc",
-							},
-						]}
+						placeholder="제품 단계를 선택해주세요."
+						options={PRODUCT_STAGE}
 					/>
 					<InputPair
 						id="size"
@@ -75,13 +55,15 @@ export default function SubmitTeamPage() {
 						placeholder="팀의 규모를 입력해주세요."
 					/>
 					<InputPair
-						id="meal"
-						label="오늘 점심 식사는 무엇입니까?"
-						name="meal"
-						description="최대 5개"
-						type="text"
+						id="share"
+						label="지분을 얼마나 나눌 수 있습니까?"
+						name="share"
+						description="지분 비율을 입력해주세요 (0-100%)"
+						type="number"
+						min={0}
+						max={100}
 						required
-						placeholder="예시: 라면, 치즈볼, 치즈퐁듀"
+						placeholder="예시: 20"
 					/>
 					<InputPair
 						id="members"
