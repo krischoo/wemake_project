@@ -1,0 +1,176 @@
+{
+  "id": "b26d83b5-f5e8-49dd-8bfe-f9a161ba9516",
+  "prevId": "00000000-0000-0000-0000-000000000000",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.jobs": {
+      "name": "jobs",
+      "schema": "",
+      "columns": {
+        "job_id": {
+          "name": "job_id",
+          "type": "bigint",
+          "primaryKey": true,
+          "notNull": true,
+          "identity": {
+            "type": "always",
+            "name": "jobs_job_id_seq",
+            "schema": "public",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "9223372036854775807",
+            "cache": "1",
+            "cycle": false
+          }
+        },
+        "position": {
+          "name": "position",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "overview": {
+          "name": "overview",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "responsibilities": {
+          "name": "responsibilities",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "qualifications": {
+          "name": "qualifications",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "benefits": {
+          "name": "benefits",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "skills": {
+          "name": "skills",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "company_name": {
+          "name": "company_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "company_logo": {
+          "name": "company_logo",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "company_location": {
+          "name": "company_location",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "apply_url": {
+          "name": "apply_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "job_type": {
+          "name": "job_type",
+          "type": "job_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "location": {
+          "name": "location",
+          "type": "location_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "salary_range": {
+          "name": "salary_range",
+          "type": "salary_range",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {
+    "public.job_type": {
+      "name": "job_type",
+      "schema": "public",
+      "values": [
+        "full-time",
+        "part-time",
+        "remote",
+        "internship",
+        "freelance"
+      ]
+    },
+    "public.location_type": {
+      "name": "location_type",
+      "schema": "public",
+      "values": [
+        "remote",
+        "in-person",
+        "hybrid"
+      ]
+    },
+    "public.salary_range": {
+      "name": "salary_range",
+      "schema": "public",
+      "values": [
+        "3천만원 미만",
+        "3천만원 ~ 5천만원",
+        "5천만원 ~ 7천만원",
+        "7천만원 ~ 1억원",
+        "1억원 이상"
+      ]
+    }
+  },
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

@@ -52,6 +52,15 @@ export default function SettingsPage() {
 							description="주로 어떤 활동을 하시나요?"
 						/>
 						<InputPair
+							label="헤드라인"
+							name="headline"
+							placeholder="예) 프론트엔드 개발자 | UX 디자이너"
+							type="text"
+							id="headline"
+							required
+							description="프로필 상단에 표시될 짧은 소개문구를 작성해주세요. (예: 직함, 전문분야 등)"
+						/>
+						<InputPair
 							label="소개글"
 							name="bio"
 							placeholder="안녕하세요!"

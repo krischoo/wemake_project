@@ -252,7 +252,7 @@ export default function Navigation({
 							<DropdownMenuSeparator />
 							<DropdownMenuGroup>
 								<DropdownMenuItem>
-									<Link to="/my/dashbaord" className="flex items-center ">
+									<Link to="/my/dashboard" className="flex items-center ">
 										<BarChart3Icon className="w-4 h-4 mr-2" />
 										Dashboard
 									</Link>
