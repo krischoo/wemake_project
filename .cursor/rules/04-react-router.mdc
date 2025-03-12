@@ -1,0 +1,32 @@
+---
+description: React Router 사용 및 라우팅 관련 규칙
+globs: "**/*.{ts,tsx}"
+alwaysApply: false
+---
+
+# React Router 규칙
+
+## 중요 규칙
+
+- ⚠️ 중요: @remix-run/react 패키지나 react-router-dom에서 절대 임포트하지 마세요. 이는 금지되어 있습니다.
+- ⚠️ Form, Link, useNavigate 등 모든 라우터 관련 임포트는 항상 'react-router'에서만 가져오세요.
+- ⚠️ 임포트를 제안할 때는 항상 'react-router'만 제안하고, '@remix-run/react'나 'react-router-dom'은 절대 제안하지 마세요.
+
+## 페이지 구성
+
+- 새 페이지를 만들 때는 항상 loader, action, meta 함수를 내보내세요.
+- 라우트 타입은 다음과 같이 임포트하세요: `import type { Route } from "./+types/...";`
+
+## 데이터 로딩 및 액션
+
+- `useLoaderData`는 더 이상 존재하지 않습니다. 대신 컴포넌트는 loaderData를 포함하는 Router.ComponentProps 타입 매개변수를 받습니다.
+- `useActionData`는 더 이상 존재하지 않습니다. 대신 컴포넌트는 actionData를 포함하는 Router.ComponentProps 타입 매개변수를 받습니다.
+- 페이지 컴포넌트에서 `useLoaderData`나 `useActionData`를 사용하지 마세요.
+- `loader` 함수는 Route.LoaderArgs 타입 매개변수를 받습니다.
+- `action` 함수는 Route.ActionArgs 타입 매개변수를 받습니다.
+- `meta` 함수는 Route.MetaFunction 타입 매개변수를 받고 MetaFunction 타입을 반환합니다.
+
+## 응답 처리
+
+- `json`은 더 이상 존재하지 않습니다. 대신 일반 객체를 반환하세요. 예: `export function loader({ request }: Route.LoaderArgs) { return { } }`
+- 상태 코드가 있는 응답을 반환할 때는 `data`를 사용하고, 그렇지 않으면 일반 객체를 반환하세요.
