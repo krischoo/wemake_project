@@ -1,20 +1,34 @@
 create function public.handle_new_user()
 returns trigger
 language plpgsql
-security definer set search_path = ''
+security definer
+set search_path = ''
 as $$
-
 begin
-
     if new.raw_app_meta_data is not null then
-      if new.raw_app_meta_data ? 'provider' AND new.raw_app_meta_data->>'provider' = 'email' then
-          insert into public.profiles (profile_id, name, username, role)
-          values(new.id, 'Anonymous', 'mr.' || substr(md5(random()::text), 1, 8), '독서 리뷰');
+        if new.raw_app_meta_data ? 'provider' AND new.raw_app_meta_data ->> 'provider' = 'email' then
+		   if new.raw_user_meta_data ? 'name' and new.raw_user_meta_data ? 'username' then
+                insert into public.profiles (profile_id, name, username, role)
+                values (new.id, new.raw_user_meta_data ->> 'name', new.raw_user_meta_data ->> 'username', '독서 리뷰');
+            else       
+                insert into  public.profiles (profile_id, name, username, role)
+                values(new.id, 'Anonymous', 'mr.' || substr(md5(random()::text), 1, 8), '독서 리뷰');
+            end if;
         end if;
-      end if;  
+
+--- kakao 계정 ---
+        if new.raw_app_meta_data ? 'provider' AND new.raw_app_meta_data ->> 'provider' = 'kakao' then
+            insert into public.profiles (profile_id, name, username, role, avatar)
+            values (new.id, new.raw_user_meta_data ->> 'name', new.raw_user_meta_data ->> 'preferred_username'|| substr(md5(random()::text), 1, 4), '독서 리뷰', new.raw_user_meta_data ->> 'avatar_url');
+        end if;
+    
+--- github 계정 ---
+        if new.raw_app_meta_data ? 'provider' AND new.raw_app_meta_data ->> 'provider' = 'github' then
+            insert into public.profiles (profile_id, name, username, role, avatar)
+            values (new.id, new.raw_user_meta_data ->> 'full_name', new.raw_user_meta_data ->> 'user_name'|| substr(md5(random()::text), 1, 5), '독서 리뷰', new.raw_user_meta_data ->> 'avatar_url');
+        end if;
+    end if;
     return new;
-    
-    
 end;
 $$;
 

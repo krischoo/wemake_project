@@ -1,6 +1,6 @@
 ---
 description: Shadcn UI, Radix UI 및 Tailwind CSS 사용에 관한 규칙
-globs: 
+globs: "**/*.{ts,tsx,css}"
 alwaysApply: false
 ---
 

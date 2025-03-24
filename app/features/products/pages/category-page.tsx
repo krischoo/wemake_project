@@ -1,41 +1,81 @@
-import type { MetaFunction } from "react-router";
+import { data, type MetaFunction } from "react-router";
 import { Route } from "./+types/category-page";
 import Hero from "~/common/components/hero";
 import { ProductCard } from "~/features/products/components/product-card";
 import ProductPagination from "~/common/components/product-pagination";
+import {
+  getCategory,
+  getCategoryPages,
+  getProductsByCategory,
+} from "../queries-products";
+import { z } from "zod";
+import { PAGE_SIZE } from "../constants-products";
 
-export const meta: Route.MetaFunction = ({ params }: Route.MetaArgs) => {
-	return [
-		{ title: `Developer Tools | writenow` },
-		{
-			name: "description",
-			content: `Browse developer tools products`,
-		},
-	];
+export const meta: Route.MetaFunction = ({
+  data: loaderData,
+}: Route.MetaArgs) => {
+  return [
+    { title: `${loaderData.category.name} | writenow` },
+    {
+      name: "description",
+      content: `Browse ${loaderData.category.name} products`,
+    },
+  ];
 };
 
-export default function CategoryPage() {
-	return (
-		<div className="space-y-10">
-			<Hero
-				title={"Developer Tools"}
-				subtitle={"Tools for developers to build their products"}
-			/>
+export const paramsSchema = z.object({
+  category: z.coerce.number(),
+});
 
-			<div className="space-y-5 w-full max-w-screen-md mx-auto">
-				{Array.from({ length: 5 }).map((_, index) => (
-					<ProductCard
-						key={`product-${index}`}
-						id={`product-${index}`}
-						name={`Product ${index + 1}`}
-						description={`Product ${index + 1} Description`}
-						commentCount={12}
-						viewCount={12}
-						upvoteCount={120}
-					/>
-				))}
-			</div>
-			<ProductPagination totalPages={10} />
-		</div>
-	);
+export const loader = async ({
+  params,
+  request,
+}: Route.LoaderArgs) => {
+  const { success, data: parsedData } =
+    paramsSchema.safeParse(params);
+  if (!success) {
+    throw new Response("Invalid params", { status: 400 });
+  }
+
+  const url = new URL(request.url);
+  const page = Number(url.searchParams.get("page") ?? 1);
+
+  const [category, products, totalPages] = await Promise.all([
+    getCategory(parsedData.category),
+    getProductsByCategory({
+      categoryId: parsedData.category,
+      page,
+    }),
+    getCategoryPages(parsedData.category),
+  ]);
+
+  return { category, products, totalPages };
+};
+
+export default function CategoryPage({
+  loaderData,
+}: Route.ComponentProps) {
+  return (
+    <div className="space-y-10">
+      <Hero
+        title={loaderData.category.name}
+        subtitle={loaderData.category.description}
+      />
+
+      <div className="space-y-5 w-full max-w-screen-md mx-auto">
+        {loaderData.products.map((product) => (
+          <ProductCard
+            key={product.product_id}
+            id={product.product_id}
+            name={product.name}
+            description={product.description}
+            reviewCount={product.reviews}
+            viewCount={product.views}
+            upvoteCount={product.upvotes}
+          />
+        ))}
+      </div>
+      <ProductPagination totalPages={loaderData.totalPages} />
+    </div>
+  );
 }

@@ -1,6 +1,6 @@
 ---
 description: Supabase 서비스 및 API 사용에 관한 규칙
-globs: 
+globs: "**/*.{ts,tsx}"
 alwaysApply: false
 ---
 
@@ -25,7 +25,6 @@ alwaysApply: false
 - 파일 업로드에는 Supabase Storage를 사용하세요.
 - 공개 및 비공개 버킷에 대한 적절한 권한을 설정하세요.
 - 이미지 변환 및 최적화에는 Supabase의 이미지 변환 기능을 사용하세요.
-- 대용량 파일 업로드에는 청크 업로드 전략을 구현하세요.
 
 ## 성능 최적화
 
