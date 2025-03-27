@@ -271,7 +271,7 @@ export default function Navigation({
                 )}
               </Avatar>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56">
+            <DropdownMenuContent className="w-56" sideOffset={5}>
               <DropdownMenuLabel className="flex flex-col">
                 <span className="font-bold">{name}</span>
                 <span className="text-s text-muted-foreground">

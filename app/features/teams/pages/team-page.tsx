@@ -84,9 +84,11 @@ export default function TeamPage({
               </CardTitle>
               <CardContent className="p-0 text-xl font-bold flex flex-wrap gap-2">
                 <ul className="list-disc list-inside">
-                  {loaderData.team.roles.split(",").map((item) => (
-                    <li key={item}>{item}</li>
-                  ))}
+                  {loaderData.team.roles
+                    .split(",")
+                    .map((item: string) => (
+                      <li key={item}>{item}</li>
+                    ))}
                 </ul>
               </CardContent>
             </CardHeader>

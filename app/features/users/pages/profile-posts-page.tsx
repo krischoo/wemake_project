@@ -2,6 +2,7 @@ import { PostCard } from "~/features/community/components/post-card";
 import { Route } from "./+types/profile-posts-page";
 import { ProductCard } from "~/features/products/components/product-card";
 import { getUserPosts } from "../queries-profiles";
+import { makeSSRClient } from "~/supa-client";
 export const meta: Route.MetaFunction = () => {
   return [
     { title: "프로필 게시물" },
@@ -9,8 +10,12 @@ export const meta: Route.MetaFunction = () => {
   ];
 };
 
-export const loader = async ({ params }: Route.LoaderArgs) => {
-  const posts = await getUserPosts(params.username);
+export const loader = async ({
+  params,
+  request,
+}: Route.LoaderArgs) => {
+  const { client } = makeSSRClient(request);
+  const posts = await getUserPosts(client, params.username);
   return { posts };
 };
 

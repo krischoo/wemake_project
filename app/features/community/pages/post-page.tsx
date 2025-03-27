@@ -1,4 +1,4 @@
-import { Form, Link } from "react-router";
+import { Form, Link, useOutletContext } from "react-router";
 import { Route } from "./+types/post-page";
 import {
   Breadcrumb,
@@ -21,6 +21,10 @@ import { getPostById, getReplies } from "../queries-community";
 import { DateTime } from "luxon";
 import { Separator } from "~/common/components/ui/separator";
 import { makeSSRClient } from "~/supa-client";
+import { getLoggedInUserId } from "~/features/users/queries-profiles";
+import { z } from "zod";
+import { createReply } from "../mutations-community";
+import { useEffect, useRef } from "react";
 
 export const meta: Route.MetaFunction = () => {
   return [
@@ -36,12 +40,56 @@ export const loader = async ({
   const { client } = makeSSRClient(request);
   const post = await getPostById(client, Number(params.postId));
   const replies = await getReplies(client, Number(params.postId));
+
   return { post, replies };
+};
+
+const formSchema = z.object({
+  reply: z.string().min(1),
+  parentId: z.coerce.number().optional(),
+});
+
+export const action = async ({
+  request,
+  params,
+}: Route.ActionArgs) => {
+  const { client } = makeSSRClient(request);
+  const userId = await getLoggedInUserId(client);
+  const formData = await request.formData();
+  const { success, data, error } = formSchema.safeParse(
+    Object.fromEntries(formData)
+  );
+  if (!success) {
+    return {
+      fieldErrors: error.flatten().fieldErrors,
+    };
+  }
+  const { reply, parentId } = data;
+  await createReply(client, {
+    reply,
+    postId: Number(params.postId),
+    userId,
+    parentId,
+  });
+  return { success: true };
 };
 
 export default function PostPage({
   loaderData,
+  actionData,
 }: Route.ComponentProps) {
+  const { isLoggedIn, name, username, avatar } = useOutletContext<{
+    isLoggedIn: boolean;
+    name?: string;
+    username?: string;
+    avatar?: string;
+  }>();
+  const formRef = useRef<HTMLFormElement>(null);
+  useEffect(() => {
+    if (actionData?.success) {
+      formRef.current?.reset();
+    }
+  }, [actionData?.success]);
   return (
     <>
       <header className="mb-10">
@@ -114,40 +162,56 @@ export default function PostPage({
           </section>
 
           {/* 댓글 작성 창 */}
-          <section className="flex gap-2 w-3/4">
-            <Avatar className="size-12">
-              <AvatarFallback>N</AvatarFallback>
-              <AvatarImage src="https://github.com/krischoo.png" />
-            </Avatar>
+          {isLoggedIn ? (
+            <section className="flex gap-2 w-3/4">
+              <Avatar className="size-12">
+                {avatar ? (
+                  <AvatarImage src={avatar} />
+                ) : (
+                  <AvatarFallback>{name?.[0]}</AvatarFallback>
+                )}
+              </Avatar>
 
-            <Form className="flex flex-col gap-2 w-full items-end">
-              <Textarea
-                placeholder="댓글을 입력하세요"
-                className="resize-none w-full"
-                rows={10}
-              />
-              <Button type="submit">댓글 작성하기</Button>
-            </Form>
-          </section>
+              <Form
+                ref={formRef}
+                method="post"
+                className="flex flex-col gap-2 w-full items-end"
+              >
+                <Textarea
+                  name="reply"
+                  placeholder="댓글을 입력하세요"
+                  className="resize-none w-full"
+                  rows={10}
+                />
+                <Button type="submit">댓글 작성하기</Button>
+              </Form>
+            </section>
+          ) : (
+            <div className="flex flex-col gap-2 w-full items-center">
+              <p>로그인 후 댓글을 작성할 수 있습니다.</p>
+              <Button variant="outline" asChild>
+                <Link to="/auth/login">로그인</Link>
+              </Button>
+            </div>
+          )}
 
           {/* 댓글 목록 */}
           <section className="space-y-5 w-3/4">
             <h4 className="text-lg font-medium">댓글 목록</h4>
 
             <div>
-              {/* 댓글 개별 아이템 */}
+              {/* 댓글 개별 아이템- 대댓글 포함 묶음) */}
               <div className="space-y-10">
                 {loaderData.replies.map((reply) => (
                   <Reply
-                    key={reply.reply_id}
-                    username={reply.user.name}
+                    name={reply.user.name}
+                    username={reply.user.username}
                     avatarUrl={reply.user.avatar}
                     content={reply.reply}
                     postedAt={reply.created_at}
                     topLevel={true}
-                    replies={
-                      reply.post_replies ? [reply.post_replies] : []
-                    }
+                    parentId={reply.reply_id}
+                    childReplies={reply.children ?? []} // props 전달
                   />
                 ))}
               </div>

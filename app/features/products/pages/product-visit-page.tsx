@@ -1,12 +1,16 @@
-import client from "~/supa-client";
 import { Route } from "./+types/product-visit-page";
 import { redirect } from "react-router";
+import { makeSSRClient } from "~/supa-client";
 
-export const loader = async ({ params }: Route.LoaderArgs) => {
+export const loader = async ({
+  params,
+  request,
+}: Route.LoaderArgs) => {
+  const { client } = makeSSRClient(request);
   const { data, error } = await client
     .from("products")
     .select("url")
-    .eq("product_id", params.productId);
+    .eq("product_id", Number(params.productId));
   if (data) {
     await client.rpc("track_event", {
       event_type: "product_click",

@@ -182,7 +182,7 @@ export const getProductReviews = async (
   productId: number
 ) => {
   const { data, error } = await client
-    .from("reviews")
+    .from("product_reviews")
     .select(
       `
       review_id,
@@ -196,7 +196,8 @@ export const getProductReviews = async (
       )
       `
     )
-    .eq("product_id", productId);
+    .eq("product_id", productId)
+    .order("created_at", { ascending: false });
   if (error) throw error;
   return data;
 };

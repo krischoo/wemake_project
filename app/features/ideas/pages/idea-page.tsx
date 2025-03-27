@@ -5,6 +5,9 @@ import { Button } from "~/common/components/ui/button";
 import { getGptIdea } from "../queries-ideas";
 import { DateTime } from "luxon";
 import { makeSSRClient } from "~/supa-client";
+import { getLoggedInUserId } from "~/features/users/queries-profiles";
+import { Form, redirect } from "react-router";
+import { claimIdea } from "../mutations-ideas";
 
 export const meta = ({ data }: Route.MetaArgs) => {
   return [
@@ -19,11 +22,29 @@ export const loader = async ({
 }: Route.LoaderArgs) => {
   const { client } = makeSSRClient(request);
   const idea = await getGptIdea(client, Number(params.ideaId));
+  if (idea.is_claimed) {
+    throw redirect(`/ideas`);
+  }
   return { idea };
+};
+
+export const action = async ({
+  params,
+  request,
+}: Route.ActionArgs) => {
+  const { client } = makeSSRClient(request);
+  const userId = await getLoggedInUserId(client);
+  const idea = await getGptIdea(client, Number(params.ideaId));
+  if (idea.is_claimed) {
+    return { ok: false };
+  }
+  await claimIdea(client, Number(params.ideaId), userId);
+  return redirect(`/my/dashboard/ideas`);
 };
 
 export default function IdeaPage({
   loaderData,
+  actionData,
 }: Route.ComponentProps) {
   return (
     <div>
@@ -48,9 +69,13 @@ export default function IdeaPage({
             </Button>
           </div>
         </div>
-        <Button size="lg" className="w-full">
-          Claim Idea Now &rarr;
-        </Button>
+        {!loaderData.idea.is_claimed && (
+          <Form method="post">
+            <Button size="lg" className="">
+              아이디어 선점하기 &rarr;
+            </Button>
+          </Form>
+        )}
       </div>
     </div>
   );

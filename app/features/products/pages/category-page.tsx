@@ -9,7 +9,8 @@ import {
   getProductsByCategory,
 } from "../queries-products";
 import { z } from "zod";
-import { PAGE_SIZE } from "../constants-products";
+
+import { Database, makeSSRClient } from "~/supa-client";
 
 export const meta: Route.MetaFunction = ({
   data: loaderData,
@@ -31,6 +32,7 @@ export const loader = async ({
   params,
   request,
 }: Route.LoaderArgs) => {
+  const { client } = makeSSRClient(request);
   const { success, data: parsedData } =
     paramsSchema.safeParse(params);
   if (!success) {
@@ -41,12 +43,12 @@ export const loader = async ({
   const page = Number(url.searchParams.get("page") ?? 1);
 
   const [category, products, totalPages] = await Promise.all([
-    getCategory(parsedData.category),
-    getProductsByCategory({
+    getCategory(client, parsedData.category),
+    getProductsByCategory(client, {
       categoryId: parsedData.category,
       page,
     }),
-    getCategoryPages(parsedData.category),
+    getCategoryPages(client, parsedData.category),
   ]);
 
   return { category, products, totalPages };
@@ -63,17 +65,21 @@ export default function CategoryPage({
       />
 
       <div className="space-y-5 w-full max-w-screen-md mx-auto">
-        {loaderData.products.map((product) => (
-          <ProductCard
-            key={product.product_id}
-            id={product.product_id}
-            name={product.name}
-            description={product.description}
-            reviewCount={product.reviews}
-            viewCount={product.views}
-            upvoteCount={product.upvotes}
-          />
-        ))}
+        {loaderData.products.map(
+          (
+            product: Database["public"]["Tables"]["products"]["Row"]
+          ) => (
+            <ProductCard
+              key={product.product_id}
+              id={product.product_id}
+              name={product.name}
+              description={product.description}
+              reviewCount={product.reviews}
+              viewCount={product.views}
+              upvoteCount={product.upvotes}
+            />
+          )
+        )}
       </div>
       <ProductPagination totalPages={loaderData.totalPages} />
     </div>

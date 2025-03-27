@@ -2,6 +2,8 @@ import { ProductCard } from "~/features/products/components/product-card";
 import { Route } from "./+types/profile-products-page";
 import { getUserProducts } from "../queries-profiles";
 import { useOutletContext } from "react-router";
+import { createClient } from "@supabase/supabase-js";
+import { makeSSRClient } from "~/supa-client";
 
 export const meta: Route.MetaFunction = () => {
   return [
@@ -10,8 +12,12 @@ export const meta: Route.MetaFunction = () => {
   ];
 };
 
-export const loader = async ({ params }: Route.LoaderArgs) => {
-  const products = await getUserProducts(params.username);
+export const loader = async ({
+  params,
+  request,
+}: Route.LoaderArgs) => {
+  const { client } = makeSSRClient(request);
+  const products = await getUserProducts(client, params.username);
   return { products };
 };
 

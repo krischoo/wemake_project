@@ -98,13 +98,14 @@ export const getReplies = async (
     .select(
       `
       ${replyQuery},
-      post_replies:post_replies!parent_id(
+      children:post_replies(
         ${replyQuery}
       )
       `
     )
+    .is("parent_id", null)
     .eq("post_id", postId)
-    .order("created_at", { ascending: false }); // 시간순 정렬 추가
+    .order("created_at", { ascending: false });
   if (error) throw error;
 
   return data;

@@ -59,6 +59,7 @@ export const action = async ({ request }: Route.ActionArgs) => {
       loginError: loginError.message,
     };
   }
+
   return redirect("/", { headers });
 };
 

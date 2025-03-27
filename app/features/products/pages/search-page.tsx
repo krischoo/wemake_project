@@ -10,6 +10,7 @@ import {
   getProductsBySearch,
   getPagesBySearch,
 } from "../queries-products";
+import { makeSSRClient } from "~/supa-client";
 export const meta: Route.MetaFunction = ({
   data,
 }: Route.MetaArgs) => {
@@ -27,6 +28,7 @@ const searchSchema = z.object({
   page: z.coerce.number().optional().default(1),
 });
 export const loader = async ({ request }: Route.LoaderArgs) => {
+  const { client } = makeSSRClient(request);
   const url = new URL(request.url);
   //사용자가 서버에 요청한 URL을 url이라는 변수에 넣는다
 
@@ -45,12 +47,12 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
   //     return { products: [], totalPages: 1 };
   //   }
 
-  const products = await getProductsBySearch({
+  const products = await getProductsBySearch(client, {
     query: parsedData.query,
     page: parsedData.page,
   });
 
-  const totalPages = await getPagesBySearch({
+  const totalPages = await getPagesBySearch(client, {
     query: parsedData.query,
   });
 

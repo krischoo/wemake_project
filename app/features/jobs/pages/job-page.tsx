@@ -57,7 +57,7 @@ export default function JobPage({
             <ul className=" text-lg list-disc list-inside">
               {loaderData.job.responsibilities
                 .split(",")
-                .map((item) => (
+                .map((item: string) => (
                   <li key={item}>{item}</li>
                 ))}
             </ul>
@@ -67,7 +67,7 @@ export default function JobPage({
             <ul className=" text-lg list-disc list-inside">
               {loaderData.job.qualifications
                 .split(",")
-                .map((item) => (
+                .map((item: string) => (
                   <li key={item}>{item}</li>
                 ))}
             </ul>
@@ -76,9 +76,11 @@ export default function JobPage({
           <div className="space-y-2">
             <h4 className="text-2xl font-bold">Skills</h4>
             <ul className=" text-lg list-disc list-inside">
-              {loaderData.job.skills.split(",").map((item) => (
-                <li key={item}>{item}</li>
-              ))}
+              {loaderData.job.skills
+                .split(",")
+                .map((item: string) => (
+                  <li key={item}>{item}</li>
+                ))}
             </ul>
           </div>
         </div>
