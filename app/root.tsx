@@ -6,6 +6,7 @@ import {
   Scripts,
   ScrollRestoration,
   useNavigation,
+  Link,
 } from "react-router";
 import { Settings } from "luxon";
 import type { Route } from "./+types/root";
@@ -14,7 +15,10 @@ import Navigation from "./common/components/navigation";
 import { useLocation } from "react-router";
 import { cn } from "./lib/utils";
 import { makeSSRClient } from "./supa-client";
-import { getUserById } from "./features/users/queries-profiles";
+import {
+  countNotifications,
+  getUserById,
+} from "./features/users/queries-profiles";
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
   {
@@ -60,12 +64,15 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
     data: { user },
   } = await client.auth.getUser();
 
-  if (user) {
+  if (user && user.id) {
     const profile = await getUserById(client, user.id);
-    return { user, profile };
+    const count = await countNotifications(client, {
+      userId: user.id,
+    });
+    return { user, profile, notificationsCount: count };
   }
 
-  return { user: null, profile: null };
+  return { user: null, profile: null, notificationsCount: 0 };
 };
 
 export default function App({ loaderData }: Route.ComponentProps) {
@@ -87,7 +94,7 @@ export default function App({ loaderData }: Route.ComponentProps) {
           username={loaderData.profile?.username ?? null}
           avatar={loaderData.profile?.avatar ?? null}
           name={loaderData.profile?.name ?? null}
-          hasNotifications={false}
+          hasNotifications={loaderData.notificationsCount > 0}
           hasMessages={false}
         />
       )}
@@ -104,15 +111,18 @@ export default function App({ loaderData }: Route.ComponentProps) {
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
-  let message = "Oops!";
-  let details = "An unexpected error occurred.";
+  let message = "앗!";
+  let details = "예상치 못한 오류가 발생했습니다.";
   let stack: string | undefined;
 
   if (isRouteErrorResponse(error)) {
-    message = error.status === 404 ? "404" : "Error";
+    message =
+      error.status === 404
+        ? "페이지를 찾을 수 없습니다"
+        : "오류가 발생했습니다";
     details =
       error.status === 404
-        ? "The requested page could not be found."
+        ? "요청하신 페이지가 존재하지 않습니다. URL을 다시 확인해주세요."
         : error.statusText || details;
   } else if (import.meta.env.DEV && error && error instanceof Error) {
     details = error.message;
@@ -120,14 +130,21 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   }
 
   return (
-    <main className="pt-16 p-4 container mx-auto">
-      <h1>{message}</h1>
-      <p>{details}</p>
-      {stack && (
-        <pre className="w-full p-4 overflow-x-auto">
-          <code>{stack}</code>
-        </pre>
-      )}
+    <main className="min-h-screen flex items-center justify-center">
+      <div className="text-center space-y-4">
+        <h1 className="text-4xl font-bold">{message}</h1>
+        <p className="text-muted-foreground">{details}</p>
+        {stack && (
+          <pre className="mt-4 p-4 bg-muted rounded-lg overflow-x-auto text-sm">
+            <code>{stack}</code>
+          </pre>
+        )}
+        <div className="mt-8">
+          <Link to="/" className="text-primary hover:underline">
+            홈으로 돌아가기 &rarr;
+          </Link>
+        </div>
+      </div>
     </main>
   );
 }

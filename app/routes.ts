@@ -105,6 +105,10 @@ export default [
   ...prefix("/community", [
     index("features/community/pages/community-page.tsx"),
     route("/:postId", "features/community/pages/post-page.tsx"),
+    route(
+      "/:postId/upvote",
+      "features/community/api/upvote-post-page.tsx"
+    ),
     route("/submit", "features/community/pages/submit-post-page.tsx"),
   ]),
   ...prefix("/teams", [
@@ -137,6 +141,10 @@ export default [
     route(
       "/notifications",
       "features/users/pages/notifications-page.tsx"
+    ),
+    route(
+      "/notifications/:notificationId/see",
+      "features/users/api/see-notification-page.tsx"
     ),
   ]),
   layout("features/users/layouts/profile-layout.tsx", [

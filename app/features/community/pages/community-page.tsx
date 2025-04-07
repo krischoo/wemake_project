@@ -162,6 +162,7 @@ export default function CommunityPage({
                 createdAt={post.created_at}
                 expanded={true}
                 upvoteCount={post.upvotes}
+                isUpvoted={post.is_upvoted}
               />
             ))}
           </section>

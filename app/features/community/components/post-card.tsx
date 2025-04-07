@@ -1,4 +1,4 @@
-import { Link } from "react-router";
+import { Link, useFetcher } from "react-router";
 import {
   Card,
   CardHeader,
@@ -23,6 +23,7 @@ interface PostCardProps {
   createdAt: string;
   expanded?: boolean;
   upvoteCount?: number;
+  isUpvoted?: boolean;
 }
 
 export function PostCard({
@@ -34,7 +35,24 @@ export function PostCard({
   createdAt,
   expanded = false,
   upvoteCount = 0,
+  isUpvoted = false,
 }: PostCardProps) {
+  const fetcher = useFetcher();
+  const optimisticVoteCount =
+    fetcher.state === "idle"
+      ? upvoteCount
+      : isUpvoted
+      ? upvoteCount - 1
+      : upvoteCount + 1;
+  const optimisticIsUpvoted =
+    fetcher.state === "idle" ? isUpvoted : !isUpvoted;
+  const absoluteClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    fetcher.submit(null, {
+      method: "POST",
+      action: `/community/${id}/upvote`,
+    });
+  };
   return (
     <Link to={`/community/${id}`} className="block">
       <Card
@@ -69,9 +87,17 @@ export function PostCard({
         )}
         {expanded && (
           <CardFooter className="flex justify-end py-0">
-            <Button variant="outline" className="flex flex-col h-14">
+            <Button
+              onClick={absoluteClick}
+              variant="outline"
+              className={cn(
+                "flex flex-col h-14",
+                optimisticIsUpvoted &&
+                  "border-primary border-2 font-bold text-primary"
+              )}
+            >
               <ChevronUpIcon className="size-4 shrink-0" />
-              <span>{upvoteCount}</span>
+              <span>{optimisticVoteCount}</span>
             </Button>
           </CardFooter>
         )}

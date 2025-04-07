@@ -1,4 +1,10 @@
-import { Form, Link, NavLink, Outlet } from "react-router";
+import {
+  Form,
+  Link,
+  NavLink,
+  Outlet,
+  useOutletContext,
+} from "react-router";
 import {
   Avatar,
   AvatarFallback,
@@ -40,7 +46,12 @@ export const loader = async ({
 
 export default function ProfileLayout({
   loaderData,
+  params,
 }: Route.ComponentProps) {
+  const { isLoggedIn, username } = useOutletContext<{
+    isLoggedIn: boolean;
+    username?: string;
+  }>();
   return (
     <div className="space-y-10">
       <header className="flex items-center gap-4">
@@ -57,35 +68,42 @@ export default function ProfileLayout({
               {loaderData.user.name}
             </h1>
             {/* 만약 프로필을 보는 사람이 나 자신이라면 이 버튼을 보여주고, 다른 사람이라면 감춰짐 */}
-            <Button variant="outline" size="sm">
-              <Link to="/my/settings">프로필 수정</Link>
-            </Button>
-            <Button variant="secondary" size="sm">
-              팔로우 하기
-            </Button>
+            {isLoggedIn && username === params.username && (
+              <Button variant="outline" size="sm">
+                <Link to="/my/settings">프로필 수정</Link>
+              </Button>
+            )}
+            {isLoggedIn && username !== params.username && (
+              <Button variant="secondary" size="sm">
+                팔로우 하기
+              </Button>
+            )}
+
             {/* 유저에게 메시지를 보낼 수 있는 버튼 */}
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button variant="secondary" size="sm">
-                  메시지 보내기
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>메시지 보내기</DialogTitle>
-                </DialogHeader>
-                <DialogDescription className="space-y-4">
-                  <span>John Doe에게 메시지를 보내세요.</span>
-                  <Form className="space-y-4">
-                    <Textarea
-                      placeholder="메시지를 입력하세요."
-                      className="resize-none row-4"
-                    />
-                    <Button type="submit">보내기</Button>
-                  </Form>
-                </DialogDescription>
-              </DialogContent>
-            </Dialog>
+            {isLoggedIn && username !== params.username && (
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="secondary" size="sm">
+                    메시지 보내기
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>메시지 보내기</DialogTitle>
+                  </DialogHeader>
+                  <DialogDescription className="space-y-4">
+                    <span>John Doe에게 메시지를 보내세요.</span>
+                    <Form className="space-y-4">
+                      <Textarea
+                        placeholder="메시지를 입력하세요."
+                        className="resize-none row-4"
+                      />
+                      <Button type="submit">보내기</Button>
+                    </Form>
+                  </DialogDescription>
+                </DialogContent>
+              </Dialog>
+            )}
           </div>
           <div className="flex gap-2 items-center">
             <span className="text-sm text-muted-foreground">

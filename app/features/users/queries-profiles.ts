@@ -36,7 +36,10 @@ export const getUserById = async (
         profile_id,
         name,
         username,
-        avatar
+        avatar,
+        headline,
+        bio,
+        role
         `
     )
     .eq("profile_id", profile_id)
@@ -104,4 +107,69 @@ export const getProductsByUserId = async (
     .eq("profile_id", userId);
   if (error) throw error;
   return data;
+};
+
+/** 유저 이름 중복 체크 **/
+export const checkUsernameAvailability = async (
+  client: SupabaseClient<Database>,
+  username: string,
+  currentUserId: string
+) => {
+  const { data, error } = await client
+    .from("profiles")
+    .select("profile_id")
+    .eq("username", username)
+    .neq("profile_id", currentUserId) // 현재의 Id는 해당되지 않음
+    .maybeSingle();
+
+  if (error) throw error;
+  return !data; // 데이터가 없으면 사용 가능
+};
+
+export const getNotifications = async (
+  client: SupabaseClient<Database>,
+  { userId }: { userId: string }
+) => {
+  const { data, error } = await client
+    .from("notifications")
+    .select(
+      `
+        notification_id,
+        type,
+        source:profiles!source_id(
+          profile_id,
+          name,
+          avatar
+        ),
+        product:products!product_id(
+          product_id,
+          name
+        ),
+        post:posts!post_id(
+          post_id,
+          title
+        ),
+        seen,
+        created_at
+      `
+    )
+    .eq("target_id", userId)
+    .order("created_at", { ascending: false });
+  if (error) throw error;
+
+  return data;
+};
+
+export const countNotifications = async (
+  client: SupabaseClient<Database>,
+  { userId }: { userId: string }
+) => {
+  const { count, error } = await client
+    .from("notifications")
+    .select("*", { count: "exact", head: true })
+    .eq("target_id", userId)
+    .eq("seen", false);
+  if (error) throw error;
+
+  return count ?? 0;
 };

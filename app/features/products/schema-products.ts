@@ -43,7 +43,7 @@ export const products = pgTable(
       name: "products_to_profiles",
     }).onDelete("cascade"),
   ]
-);
+); // 6.12 강의
 
 export const categories = pgTable("categories", {
   category_id: bigint({ mode: "number" })

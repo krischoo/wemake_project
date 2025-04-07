@@ -10,8 +10,8 @@ import { DotIcon, EyeIcon, HeartIcon, LockIcon } from "lucide-react";
 import { Button } from "@/common/components/ui/button";
 import { cn } from "@/lib/utils";
 import { DateTime } from "luxon";
+
 interface IdeaCardProps {
-  key: number;
   id: number;
   title: string;
   viewCount?: number;
@@ -23,7 +23,6 @@ interface IdeaCardProps {
 }
 
 export function IdeaCard({
-  key,
   id,
   title,
   viewCount,
@@ -36,19 +35,19 @@ export function IdeaCard({
   return (
     <Card className="bg-transparent hover:bg-card/50 transition-colors">
       <CardHeader>
-        <Link to={claimed || owner ? "" : `/ideas/${id}`}>
+        {claimed || owner ? (
           <CardTitle className="text-lg">
-            <span
-              className={cn(
-                claimed
-                  ? "break-all bg-muted-foreground text-muted-foreground"
-                  : ""
-              )}
-            >
+            <span className="break-all bg-muted-foreground text-muted-foreground">
               {title}
             </span>
           </CardTitle>
-        </Link>
+        ) : (
+          <Link to={`/ideas/${id}`}>
+            <CardTitle className="text-lg">
+              <span>{title}</span>
+            </CardTitle>
+          </Link>
+        )}
       </CardHeader>
       {!claimed && !owner && (
         <CardContent className="flex gap-2 text-sm">
@@ -77,10 +76,7 @@ export function IdeaCard({
               asChild
               className="text-sm px-5"
             >
-              <Link
-                className="tracking-tighter"
-                to={`/ideas/${id}/claim`}
-              >
+              <Link className="tracking-tighter" to={`/ideas/${id}`}>
                 선점하기 &rarr;
               </Link>
             </Button>

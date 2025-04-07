@@ -78,7 +78,13 @@ export default function DashboardLayout({
             <SidebarMenu>
               {loaderData.products.map((product) => (
                 <SidebarMenuItem key={product.product_id}>
-                  <SidebarMenuButton asChild>
+                  <SidebarMenuButton
+                    asChild
+                    isActive={
+                      location.pathname ===
+                      `/my/dashboard/products/${product.product_id}`
+                    }
+                  >
                     <Link
                       to={`/my/dashboard/products/${product.product_id}`}
                     >

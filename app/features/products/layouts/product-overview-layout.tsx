@@ -17,9 +17,15 @@ export const meta: Route.MetaFunction = ({
   ];
 };
 
-export const loader = async ({ params, request }: Route.LoaderArgs) => {
+export const loader = async ({
+  params,
+  request,
+}: Route.LoaderArgs) => {
   const { client } = makeSSRClient(request);
-  const product = await getProductById(client, Number(params.productId));
+  const product = await getProductById(
+    client,
+    Number(params.productId)
+  );
   return { product };
 };
 
@@ -30,7 +36,13 @@ export default function ProductOverviewLayout({
     <div className="space-y-10">
       <header className="flex justify-between">
         <div className="flex gap-10">
-          <div className="size-40 rounded-xl shadow-xl bg-primary/50"></div>
+          <div className="size-40 rounded-xl overflow-hidden shadow-xl bg-primary/50">
+            <img
+              src={loaderData.product.icon}
+              alt={loaderData.product.name}
+              className="w-full h-full object-cover"
+            />
+          </div>
           <div>
             <h1 className="text-5xl font-bold">
               {loaderData.product.name}

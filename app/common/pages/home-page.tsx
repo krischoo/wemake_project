@@ -137,6 +137,7 @@ export default function HomePage({
         </div>
         {loaderData.jobs.map((job) => (
           <JobCard
+            key={job.job_id}
             id={job.job_id}
             company={job.company_name}
             companyLogoUrl={job.company_logo}

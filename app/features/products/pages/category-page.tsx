@@ -65,21 +65,17 @@ export default function CategoryPage({
       />
 
       <div className="space-y-5 w-full max-w-screen-md mx-auto">
-        {loaderData.products.map(
-          (
-            product: Database["public"]["Tables"]["products"]["Row"]
-          ) => (
-            <ProductCard
-              key={product.product_id}
-              id={product.product_id}
-              name={product.name}
-              description={product.description}
-              reviewCount={product.reviews}
-              viewCount={product.views}
-              upvoteCount={product.upvotes}
-            />
-          )
-        )}
+        {loaderData.products.map((product) => (
+          <ProductCard
+            key={product.product_id}
+            id={product.product_id}
+            name={product.name}
+            description={product.description}
+            reviewCount={product.reviews}
+            viewCount={product.views}
+            upvoteCount={product.upvotes}
+          />
+        ))}
       </div>
       <ProductPagination totalPages={loaderData.totalPages} />
     </div>

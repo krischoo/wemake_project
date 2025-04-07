@@ -85,7 +85,7 @@ export default function Reply({
         </Avatar>
         <div className="space-y-2 flex flex-col w-full">
           <div className="flex gap-2 items-center">
-            <Link to={`/users/@${username}`}>
+            <Link to={`/users/${username}`}>
               <h4 className="text-lg font-medium">{username}</h4>
             </Link>
             <DotIcon className="size-4" />

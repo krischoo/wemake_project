@@ -2,6 +2,8 @@ import { Route } from "./+types/product-visit-page";
 import { redirect } from "react-router";
 import { makeSSRClient } from "~/supa-client";
 
+// 클릭에 대한 카운트 실행 후 리다이렉트만 해주는 페이지
+
 export const loader = async ({
   params,
   request,
@@ -10,7 +12,8 @@ export const loader = async ({
   const { data, error } = await client
     .from("products")
     .select("url")
-    .eq("product_id", Number(params.productId));
+    .eq("product_id", Number(params.productId))
+    .single();
   if (data) {
     await client.rpc("track_event", {
       event_type: "product_click",
@@ -18,7 +21,6 @@ export const loader = async ({
         product_id: params.productId,
       },
     });
-    return redirect(data[0].url);
+    return redirect(data.url);
   }
-  return null;
 };

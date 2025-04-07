@@ -296,28 +296,31 @@ export type Database = {
       }
       notifications: {
         Row: {
-          created_at: string | null
+          created_at: string
           notification_id: number
           post_id: number | null
           product_id: number | null
+          seen: boolean
           source_id: string | null
           target_id: string
           type: Database["public"]["Enums"]["notification_type"]
         }
         Insert: {
-          created_at?: string | null
+          created_at?: string
           notification_id?: never
           post_id?: number | null
           product_id?: number | null
+          seen?: boolean
           source_id?: string | null
           target_id: string
           type: Database["public"]["Enums"]["notification_type"]
         }
         Update: {
-          created_at?: string | null
+          created_at?: string
           notification_id?: never
           post_id?: number | null
           product_id?: number | null
+          seen?: boolean
           source_id?: string | null
           target_id?: string
           type?: Database["public"]["Enums"]["notification_type"]
@@ -809,6 +812,7 @@ export type Database = {
           author_username: string | null
           content: string | null
           created_at: string | null
+          is_upvoted: boolean | null
           post_id: number | null
           products_count: number | null
           replies_count: number | null
@@ -826,6 +830,7 @@ export type Database = {
           author_name: string | null
           author_username: string | null
           created_at: string | null
+          is_upvoted: boolean | null
           post_id: number | null
           title: string | null
           topic_name: string | null
@@ -869,6 +874,16 @@ export type Database = {
         }
         Returns: {
           views: number
+          month: string
+        }[]
+      }
+      get_product_stats: {
+        Args: {
+          product_id: string
+        }
+        Returns: {
+          product_views: number
+          product_clicks: number
           month: string
         }[]
       }
