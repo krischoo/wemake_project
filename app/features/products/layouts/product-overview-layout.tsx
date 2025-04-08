@@ -1,8 +1,7 @@
 import { Link, NavLink, Outlet } from "react-router";
 import { Route } from "./+types/product-overview-layout";
 import { Button } from "~/common/components/ui/button";
-import { StarIcon } from "lucide-react";
-import { ChevronUpIcon } from "lucide-react";
+import { StarIcon, ChevronUpIcon } from "lucide-react";
 import { cn } from "~/lib/utils";
 import { buttonVariants } from "~/common/components/ui/button";
 import { getProductById } from "../queries-products";

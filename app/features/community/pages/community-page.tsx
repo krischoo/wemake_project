@@ -9,7 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuCheckboxItem,
 } from "~/common/components/ui/dropdown-menu";
-import { ChevronDownIcon, MenuIcon } from "lucide-react";
+import { ChevronDownIcon } from "lucide-react";
 import { SORT_OPTIONS, PERIOD_OPTIONS } from "../constants-community";
 import { useSearchParams } from "react-router";
 import { Form } from "react-router";

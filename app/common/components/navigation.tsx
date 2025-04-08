@@ -28,7 +28,6 @@ import {
   AvatarImage,
 } from "~/common/components/ui/avatar";
 import {
-  UserPen,
   BarChart3Icon,
   UserIcon,
   SettingsIcon,

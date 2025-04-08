@@ -4,7 +4,7 @@ import { Form, Link, redirect, useNavigation } from "react-router";
 
 import { Button } from "~/common/components/ui/button";
 import AuthButtons from "../components/auth-buttons";
-import { CircleIcon, LoaderCircleIcon } from "lucide-react";
+import { LoaderCircleIcon } from "lucide-react";
 import { z } from "zod";
 import { makeSSRClient } from "~/supa-client";
 export const meta: Route.MetaFunction = () => {

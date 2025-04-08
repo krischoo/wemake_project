@@ -23,7 +23,7 @@
  * ```
  */
 
-import { LockKeyhole } from "lucide-react";
+
 import React from "react";
 
 export const SOCIAL_ICON_NAMES = {
