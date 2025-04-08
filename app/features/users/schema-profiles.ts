@@ -4,19 +4,26 @@ import {
   jsonb,
   pgEnum,
   pgSchema,
+  pgPolicy,
   pgTable,
   primaryKey,
   text,
   timestamp,
   uuid,
 } from "drizzle-orm/pg-core";
+import {
+  authenticatedRole,
+  authUid,
+  authUsers,
+} from "drizzle-orm/supabase";
 import { products } from "../products/schema-products";
 import { posts } from "../community/schema-community";
+import { sql } from "drizzle-orm";
 
-/** user 테이블 (추후 삭제) **/
-export const users = pgSchema("auth").table("users", {
-  id: uuid("id").primaryKey(),
-});
+/** user 테이블 (추후 삭제) => 대신에 authUser 사용 [14.1]**/
+// export const users = pgSchema("auth").table("users", {
+//   id: uuid("id").primaryKey(),
+// });
 
 export const roles = pgEnum("role", [
   "독서 리뷰",
@@ -29,7 +36,7 @@ export const roles = pgEnum("role", [
 export const profiles = pgTable("profiles", {
   profile_id: uuid("profile_id")
     .primaryKey()
-    .references(() => users.id, { onDelete: "cascade" }),
+    .references(() => authUsers.id, { onDelete: "cascade" }),
   avatar: text(),
   name: text().notNull(),
   username: text().notNull().unique(),
@@ -148,3 +155,34 @@ export const messages = pgTable("messages", {
   content: text().notNull(),
   created_at: timestamp("created_at").defaultNow(),
 });
+
+export const todos = pgTable(
+  "todos",
+  {
+    todo_id: bigint("todo_id", { mode: "number" })
+      .primaryKey()
+      .generatedAlwaysAsIdentity(),
+    title: text().notNull(),
+    completed: boolean().notNull().default(false),
+    created_at: timestamp("created_at").defaultNow(),
+    profile_id: uuid()
+      .references(() => profiles.profile_id, {
+        onDelete: "cascade",
+      })
+      .notNull(),
+  },
+  (table) => [
+    pgPolicy("todos-insert-policy", {
+      for: "insert",
+      to: authenticatedRole,
+      as: "permissive",
+      withCheck: sql`${authUid} = ${table.profile_id}`,
+    }),
+    pgPolicy("todos-select-policy", {
+      for: "select",
+      to: authenticatedRole,
+      as: "permissive",
+      using: sql`${authUid} = ${table.profile_id}`,
+    }),
+  ]
+);

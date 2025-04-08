@@ -35,11 +35,11 @@ export const action = async ({ request }: Route.ActionArgs) => {
       {
         role: "user",
         content:
-          "웹 검색을 통해, 오늘 많은 사람들이 관심을 갖고 있는 최신 뉴스를 10개 만들어",
+          "웹앱으로 만들 수 있는 기가막힌 아이디어 설명, 스마트폰 보다는 책상에 앉아서 PC를 사용하는 사람들을 위한 웹사이트, 추후에 수익화도 실현할 수 있도록",
       },
       {
         role: "assistant",
-        content: "최신 뉴스를 10개 만들어",
+        content: "실행 가능한 아이디어 10개 만들어",
       },
     ],
     response_format: zodResponseFormat(responseSchema, "ideas"),

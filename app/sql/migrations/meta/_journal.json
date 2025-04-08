@@ -134,6 +134,48 @@
       "when": 1743954272777,
       "tag": "0018_salty_tomas",
       "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1744105247914,
+      "tag": "0019_polite_major_mapleleaf",
+      "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "7",
+      "when": 1744109794575,
+      "tag": "0020_amusing_dreadnoughts",
+      "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "7",
+      "when": 1744110491646,
+      "tag": "0021_illegal_typhoid_mary",
+      "breakpoints": true
+    },
+    {
+      "idx": 22,
+      "version": "7",
+      "when": 1744110824403,
+      "tag": "0022_oval_colossus",
+      "breakpoints": true
+    },
+    {
+      "idx": 23,
+      "version": "7",
+      "when": 1744111193335,
+      "tag": "0023_normal_makkari",
+      "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "7",
+      "when": 1744111552311,
+      "tag": "0024_fixed_absorbing_man",
+      "breakpoints": true
     }
   ]
 }

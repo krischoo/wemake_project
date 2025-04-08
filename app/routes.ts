@@ -151,8 +151,8 @@ export default [
       "features/users/api/see-notification-page.tsx"
     ),
   ]),
-  layout("features/users/layouts/profile-layout.tsx", [
-    ...prefix("/users/:username", [
+  ...prefix("/users/:username", [
+    layout("features/users/layouts/profile-layout.tsx", [
       index("features/users/pages/profile-page.tsx"),
       route(
         "/products",
@@ -160,5 +160,6 @@ export default [
       ),
       route("/posts", "features/users/pages/profile-posts-page.tsx"),
     ]),
+    route("/welcome", "features/users/api/welcome-page.tsx"),
   ]),
 ] satisfies RouteConfig;

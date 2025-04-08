@@ -1,0 +1,2 @@
+-- Empty migration file
+-- This file was recreated to fix a missing migration file error 
