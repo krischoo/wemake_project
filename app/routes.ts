@@ -71,6 +71,10 @@ export default [
   ...prefix("/ideas", [
     index("features/ideas/pages/ideas-page.tsx"),
     route("/:ideaId", "features/ideas/pages/idea-page.tsx"),
+    route(
+      "/api/generate",
+      "features/ideas/api/generate-idea-page.tsx"
+    ),
   ]),
   ...prefix("/jobs", [
     index("features/jobs/pages/jobs-page.tsx"),

@@ -7,6 +7,7 @@ import {
 import { MergeDeep, SetNonNullable, SetFieldType } from "type-fest";
 import { Database as SupabaseDatabase } from "database.types";
 import { LoaderFunctionArgs } from "react-router";
+import { createClient } from "@supabase/supabase-js";
 
 export type Database = MergeDeep<
   SupabaseDatabase,
@@ -50,7 +51,7 @@ export const browserClient = createBrowserClient<Database>(
 export const makeSSRClient = (request: Request) => {
   const headers = new Headers();
 
-  const client = createServerClient<Database>( //supabase-client
+  const serverSideClient = createServerClient<Database>( //supabase-client
     process.env.SUPABASE_URL!,
     process.env.SUPABASE_ANON_KEY!,
     {
@@ -77,5 +78,10 @@ export const makeSSRClient = (request: Request) => {
     }
   );
 
-  return { client, headers };
+  return { client: serverSideClient, headers };
 };
+
+export const adminClient = createClient<Database>(
+  process.env.SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+);
