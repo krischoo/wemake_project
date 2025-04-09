@@ -17,7 +17,7 @@ export const loader = async ({
     return redirect("/auth/login");
   }
   const { provider } = data;
-  const redirectTo = `http://localhost:5173/auth/social/${provider}/complete`;
+  const redirectTo = `https://linkey.us/auth/social/${provider}/complete`;
   const { client, headers } = makeSSRClient(request);
   const {
     data: { url },
