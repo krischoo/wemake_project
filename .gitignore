@@ -10,3 +10,6 @@
 
 # React Email
 /react-email-starter/node_modules/
+
+# Test Page
+/app/common/pages/test-page.tsx

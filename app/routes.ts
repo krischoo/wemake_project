@@ -15,23 +15,23 @@ export default [
         index("features/products/pages/leaderboard-page.tsx"),
         route(
           "/yearly/:year",
-          "features/products/pages/yearly-leaderboard-page.tsx"
+          "features/products/pages/yearly-leaderboard-page.tsx",
         ),
         route(
           "/monthly/:year/:month",
-          "features/products/pages/monthly-leaderboard-page.tsx"
+          "features/products/pages/monthly-leaderboard-page.tsx",
         ),
         route(
           "/weekly/:year/:week",
-          "features/products/pages/weekly-leaderboard-page.tsx"
+          "features/products/pages/weekly-leaderboard-page.tsx",
         ),
         route(
           "/daily/:year/:month/:day",
-          "features/products/pages/daily-leaderboard-page.tsx"
+          "features/products/pages/daily-leaderboard-page.tsx",
         ),
         route(
           "/:period",
-          "features/products/pages/leaderboards-redirection-page.tsx"
+          "features/products/pages/leaderboards-redirection-page.tsx",
         ),
       ]),
     ]),
@@ -39,13 +39,13 @@ export default [
       index("features/products/pages/categories-page.tsx"),
       route(
         "/:category",
-        "features/products/pages/category-page.tsx"
+        "features/products/pages/category-page.tsx",
       ),
     ]),
     route("/search", "features/products/pages/search-page.tsx"),
     route(
       "/submit",
-      "features/products/pages/submit-product-page.tsx"
+      "features/products/pages/submit-product-page.tsx",
     ),
     route("/promote", "features/products/pages/promote-page.tsx"),
     ...prefix("/:productId", [
@@ -55,16 +55,16 @@ export default [
         [
           route(
             "/overview",
-            "features/products/pages/product-overview-page.tsx"
+            "features/products/pages/product-overview-page.tsx",
           ),
           ...prefix("/reviews", [
             index("features/products/pages/product-reviews-page.tsx"),
           ]),
-        ]
+        ],
       ),
       route(
         "/visit",
-        "features/products/pages/product-visit-page.tsx"
+        "features/products/pages/product-visit-page.tsx",
       ),
     ]),
   ]),
@@ -73,7 +73,7 @@ export default [
     route("/:ideaId", "features/ideas/pages/idea-page.tsx"),
     route(
       "/api/generate",
-      "features/ideas/api/generate-idea-page.tsx"
+      "features/ideas/api/generate-idea-page.tsx",
     ),
   ]),
   ...prefix("/jobs", [
@@ -90,17 +90,17 @@ export default [
         route("/start", "features/auth/pages/otp-start-page.tsx"),
         route(
           "/complete",
-          "features/auth/pages/otp-complete-page.tsx"
+          "features/auth/pages/otp-complete-page.tsx",
         ),
       ]),
       ...prefix("/social/:provider", [
         route(
           "/start",
-          "features/auth/pages/social-login-start-page.tsx"
+          "features/auth/pages/social-login-start-page.tsx",
         ),
         route(
           "/complete",
-          "features/auth/pages/social-login-complete-page.tsx"
+          "features/auth/pages/social-login-complete-page.tsx",
         ),
       ]),
     ]),
@@ -111,7 +111,7 @@ export default [
     route("/:postId", "features/community/pages/post-page.tsx"),
     route(
       "/:postId/upvote",
-      "features/community/api/upvote-post-page.tsx"
+      "features/community/api/upvote-post-page.tsx",
     ),
     route("/submit", "features/community/pages/submit-post-page.tsx"),
   ]),
@@ -126,11 +126,11 @@ export default [
         index("features/users/pages/dashboard-page.tsx"),
         route(
           "/ideas",
-          "features/users/pages/dashboard-ideas-page.tsx"
+          "features/users/pages/dashboard-ideas-page.tsx",
         ),
         route(
           "/products/:productId",
-          "features/users/pages/dashboard-product-page.tsx"
+          "features/users/pages/dashboard-product-page.tsx",
         ),
       ]),
     ]),
@@ -144,11 +144,11 @@ export default [
     route("/settings", "features/users/pages/settings-page.tsx"),
     route(
       "/notifications",
-      "features/users/pages/notifications-page.tsx"
+      "features/users/pages/notifications-page.tsx",
     ),
     route(
       "/notifications/:notificationId/see",
-      "features/users/api/see-notification-page.tsx"
+      "features/users/api/see-notification-page.tsx",
     ),
   ]),
   ...prefix("/users/:username", [
@@ -156,10 +156,11 @@ export default [
       index("features/users/pages/profile-page.tsx"),
       route(
         "/products",
-        "features/users/pages/profile-products-page.tsx"
+        "features/users/pages/profile-products-page.tsx",
       ),
       route("/posts", "features/users/pages/profile-posts-page.tsx"),
     ]),
     route("/welcome", "features/users/api/welcome-page.tsx"),
   ]),
+  route("/test", "common/pages/test-page.tsx"),
 ] satisfies RouteConfig;
